@@ -1,0 +1,2227 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌿 SMART ECO-STATION // Freeboard IoT Realtime Dashboard</title>
+  <meta name="description"
+    content="Smart Eco & Weather Station ระบบตรวจวัดสภาพแวดล้อมและสภาพอากาศอัจฉริยะ 7 พารามิเตอร์ เชื่อมต่อ Firebase Realtime Database" />
+
+  <!-- Google Fonts: Prompt & Outfit & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Stylesheet -->
+  <style>
+    /* ==============================================================================
+   🌿 SMART ECO-STATION // FREEBOARD IOT REALTIME DASHBOARD
+   Aesthetic: Cybernetic Eco-Futurism, Glowing Aurora, & Ultra-Modern Glassmorphism
+   Path: /freeboard/styles.css
+   ============================================================================== */
+
+    :root {
+      --font-main: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Theme Palette - Cyber Eco */
+      --bg-deep: #070b14;
+      --bg-card: rgba(12, 20, 36, 0.65);
+      --bg-card-hover: rgba(18, 30, 54, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(0, 242, 254, 0.35);
+
+      --neon-cyan: #00f2fe;
+      --neon-emerald: #10b981;
+      --neon-teal: #14b8a6;
+      --neon-amber: #f59e0b;
+      --neon-rose: #f43f5e;
+      --neon-purple: #a855f7;
+      --neon-blue: #3b82f6;
+      --neon-lime: #84cc16;
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+
+      --glass-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.55);
+      --glow-cyan: 0 0 25px rgba(0, 242, 254, 0.4);
+      --glow-emerald: 0 0 25px rgba(16, 185, 129, 0.4);
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --radius-full: 9999px;
+      --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-deep: #f1f5f9;
+      --bg-card: rgba(255, 255, 255, 0.85);
+      --bg-card-hover: rgba(255, 255, 255, 0.98);
+      --border-subtle: rgba(0, 0, 0, 0.08);
+      --border-glow: rgba(16, 185, 129, 0.35);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-deep);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.5;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated Canvas Background (Cyber-Eco Particle Network) */
+    #ecoCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* App Container */
+    .app-container {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Glassmorphism Surface Base */
+    .glass-panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--glass-shadow);
+      transition: var(--transition);
+    }
+
+    .glass-panel:hover {
+      border-color: rgba(0, 242, 254, 0.22);
+    }
+
+    /* ================= HEADER BAR ================= */
+    .main-header {
+      padding: 1.25rem 1.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+    }
+
+    .brand-icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #10b981, #00f2fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.45);
+      animation: pulse-aura 3.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulse-aura {
+      0% {
+        transform: scale(1) rotate(0deg);
+        filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.4));
+      }
+
+      100% {
+        transform: scale(1.06) rotate(3deg);
+        filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.7));
+      }
+    }
+
+    .brand-info h1 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      background: linear-gradient(90deg, #ffffff, #67e8f9, #a7f3d0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+
+    [data-theme="light"] .brand-info h1 {
+      background: linear-gradient(90deg, #0f172a, #0d9488, #0284c7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-info p {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.2rem;
+    }
+
+    .header-status-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-full);
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: var(--neon-emerald);
+      font-size: 0.825rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .status-pill.offline {
+      background: rgba(244, 63, 94, 0.12);
+      border-color: rgba(244, 63, 94, 0.35);
+      color: var(--neon-rose);
+    }
+
+    .status-pill.simulating {
+      background: rgba(168, 85, 247, 0.15);
+      border-color: rgba(168, 85, 247, 0.45);
+      color: var(--neon-purple);
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 10px currentColor;
+      animation: pulse-dot 1.4s infinite;
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.3;
+        transform: scale(0.7);
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.15rem;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #10b981, #00f2fe);
+      color: #04101e;
+      border: none;
+      box-shadow: 0 4px 18px rgba(0, 242, 254, 0.35);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.15);
+      box-shadow: 0 6px 22px rgba(0, 242, 254, 0.55);
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      font-size: 1.1rem;
+    }
+
+    /* ================= SYSTEM PIPELINE & LIVE TICKER ================= */
+    .architecture-card {
+      padding: 1.35rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .arch-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .arch-title {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .live-beacon {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      background: rgba(0, 242, 254, 0.08);
+      border: 1px solid rgba(0, 242, 254, 0.25);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-full);
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+    }
+
+    .arch-pipeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .pipe-step {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .pipe-step:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--border-glow);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .pipe-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pipe-icon {
+      font-size: 1.35rem;
+    }
+
+    .pipe-tag {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      padding: 0.15rem 0.55rem;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+    }
+
+    .pipe-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .pipe-desc {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ================= 7 SENSOR METRIC CARDS ================= */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .metric-card {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.25rem;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, currentColor, transparent);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .metric-card:hover {
+      transform: translateY(-4px);
+      border-color: currentColor;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+    }
+
+    .metric-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .metric-label-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .metric-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+
+    .metric-badge {
+      display: inline-block;
+      font-size: 0.725rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      width: fit-content;
+    }
+
+    .metric-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      transition: var(--transition);
+    }
+
+    .metric-card:hover .metric-icon-wrap {
+      transform: scale(1.1) rotate(5deg);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .card-main-val {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin: 0.25rem 0;
+    }
+
+    .metric-num {
+      font-family: var(--font-mono);
+      font-size: 2.85rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .metric-unit {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .metric-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 0.85rem;
+    }
+
+    .metric-bar-container {
+      width: 100%;
+      height: 7px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .metric-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Card Specific Color Schemes */
+    .card-temp {
+      color: #f43f5e;
+    }
+
+    .card-temp .metric-bar-fill {
+      background: linear-gradient(90deg, #fb923c, #f43f5e);
+    }
+
+    .card-temp .metric-badge {
+      background: rgba(244, 63, 94, 0.15);
+      color: #f43f5e;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+
+    .card-humidity {
+      color: #00f2fe;
+    }
+
+    .card-humidity .metric-bar-fill {
+      background: linear-gradient(90deg, #38bdf8, #00f2fe);
+    }
+
+    .card-humidity .metric-badge {
+      background: rgba(0, 242, 254, 0.15);
+      color: #00f2fe;
+      border: 1px solid rgba(0, 242, 254, 0.3);
+    }
+
+    .card-light {
+      color: #fbbf24;
+    }
+
+    .card-light .metric-bar-fill {
+      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    }
+
+    .card-light .metric-badge {
+      background: rgba(251, 191, 36, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .card-soil {
+      color: #10b981;
+    }
+
+    .card-soil .metric-bar-fill {
+      background: linear-gradient(90deg, #059669, #10b981);
+    }
+
+    .card-soil .metric-badge {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .card-co2 {
+      color: #a855f7;
+    }
+
+    .card-co2 .metric-bar-fill {
+      background: linear-gradient(90deg, #7c3aed, #a855f7);
+    }
+
+    .card-co2 .metric-badge {
+      background: rgba(168, 85, 247, 0.15);
+      color: #a855f7;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .card-pressure {
+      color: #06b6d4;
+    }
+
+    .card-pressure .metric-bar-fill {
+      background: linear-gradient(90deg, #0284c7, #06b6d4);
+    }
+
+    .card-pressure .metric-badge {
+      background: rgba(6, 182, 212, 0.15);
+      color: #06b6d4;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .card-battery {
+      color: #84cc16;
+    }
+
+    .card-battery .metric-bar-fill {
+      background: linear-gradient(90deg, #65a30d, #84cc16);
+    }
+
+    .card-battery .metric-badge {
+      background: rgba(132, 204, 22, 0.15);
+      color: #84cc16;
+      border: 1px solid rgba(132, 204, 22, 0.3);
+    }
+
+    /* ================= ANALYTICS & INSIGHTS ================= */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 1080px) {
+      .analytics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-card,
+    .insights-card {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+    }
+
+    .card-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .card-header-title {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .chart-controls {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .chart-btn {
+      padding: 0.3rem 0.75rem;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .chart-btn.active,
+    .chart-btn:hover {
+      background: var(--neon-cyan);
+      color: #04101e;
+      border-color: var(--neon-cyan);
+      font-weight: 700;
+    }
+
+    .chart-canvas-wrap {
+      position: relative;
+      height: 330px;
+      width: 100%;
+    }
+
+    /* Insight Items */
+    .insights-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .insight-item {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.9rem 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      transition: var(--transition);
+    }
+
+    .insight-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(0, 242, 254, 0.25);
+      transform: translateX(3px);
+    }
+
+    .insight-left {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .insight-icon {
+      font-size: 1.35rem;
+    }
+
+    .insight-meta h4 {
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
+    .insight-meta p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .insight-val {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--neon-cyan);
+    }
+
+    /* ================= HISTORY LOG TABLE ================= */
+    .table-card {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    .data-table th {
+      background: rgba(255, 255, 255, 0.035);
+      padding: 0.95rem 1rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-subtle);
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    .data-table tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .table-badge {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .badge-online {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--neon-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* ================= SETTINGS MODAL ================= */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: var(--transition);
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: #0d1527;
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      max-width: 580px;
+      width: 100%;
+      padding: 1.85rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+      transform: translateY(20px);
+      transition: var(--transition);
+    }
+
+    .modal-overlay.open .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.8rem 1rem;
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .form-control:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.25);
+    }
+
+    .form-help {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    /* ================= FOOTER ================= */
+    .main-footer {
+      text-align: center;
+      padding: 1.75rem 1rem;
+      font-size: 0.825rem;
+      color: var(--text-dim);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    /* ================= TOASTS ================= */
+    .toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      z-index: 9999;
+    }
+
+    .toast {
+      background: rgba(13, 21, 39, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-glow);
+      border-left: 4px solid var(--neon-cyan);
+      border-radius: var(--radius-md);
+      padding: 0.9rem 1.35rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      animation: slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slide-in {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Dynamic Cyber-Eco Particle & Aurora Canvas Background -->
+  <canvas id="ecoCanvas"></canvas>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Main Container -->
+  <div class="app-container">
+
+    <!-- 1. Header Bar -->
+    <header class="main-header glass-panel">
+      <div class="brand-wrapper">
+        <div class="brand-icon-wrap">🌱</div>
+        <div class="brand-info">
+          <h1>SMART ECO &amp; WEATHER STATION</h1>
+          <p>สถานีตรวจวัดสภาพแวดล้อมและสภาพอากาศ 7 พารามิเตอร์ • <span
+              style="font-family: var(--font-mono); color: var(--neon-cyan); font-weight: 700;">/freeboard</span> •
+            โหนด: <span id="currentDeviceLabel"
+              style="font-family: var(--font-mono); color: #38bdf8;">esp32-eco-station</span></p>
+        </div>
+      </div>
+
+      <div class="header-status-group">
+        <div class="status-pill" id="connectionStatusPill">
+          <span class="status-dot"></span>
+          <span id="connectionStatusText">กำลังเชื่อมต่อ Firebase...</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-primary" id="btnToggleSim" title="ทดสอบจำลองส่งข้อมูลโดยไม่ต้องต่อบอร์ดจริง">
+          <span>🎲 ทดสอบข้อมูลจำลอง</span>
+        </button>
+        <button class="btn icon-btn" id="btnCanvasFx" title="เปิด/ปิด แอนิเมชันพื้นหลัง (Particle FX)">
+          <span>🌌</span>
+        </button>
+        <button class="btn icon-btn" id="btnRefresh" title="รีเฟรชข้อมูล">
+          <span>🔄</span>
+        </button>
+        <button class="btn icon-btn" id="btnSound" title="เปิด/ปิดเสียงเอฟเฟกต์">
+          <span>🔊</span>
+        </button>
+        <button class="btn icon-btn" id="btnTheme" title="เปลี่ยนธีม มืด/สว่าง">
+          <span>🌙</span>
+        </button>
+        <button class="btn icon-btn" id="btnSettings" title="ตั้งค่า Firebase Database URL">
+          <span>⚙️</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. System Architecture Pipeline (ตามโจทย์อาจารย์) -->
+    <section class="architecture-card glass-panel">
+      <div class="arch-header">
+        <div class="arch-title">
+          <span>📐 โครงสร้างระบบการทำงาน (System Architecture)</span>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-dim);">
+          อัปเดตล่าสุด: <span id="lastUpdateText" style="color: var(--accent-cyan); font-weight: 500;">-</span>
+        </div>
+      </div>
+
+      <div class="arch-pipeline">
+        <!-- Step 1: ESP32 / ESPHome -->
+        <div class="pipe-step">
+          <div class="pipe-header">
+            <span class="pipe-icon">📟</span>
+            <span class="pipe-tag">Hardware / Firmware</span>
+          </div>
+          <div class="pipe-name">ESP32 &amp; ESPHome</div>
+          <div class="pipe-desc">สุ่มค่าเซนเซอร์จำลอง (Template Sensor) ส่งออกผ่าน HTTP REST API ทุก 10s</div>
+        </div>
+
+        <!-- Step 2: Firebase RTDB /latest -->
+        <div class="pipe-step">
+          <div class="pipe-header">
+            <span class="pipe-icon">⚡</span>
+            <span class="pipe-tag">PUT /latest.json</span>
+          </div>
+          <div class="pipe-name">Firebase: latest</div>
+          <div class="pipe-desc">บันทึกทับค่าปัจจุบันแบบ Realtime ทันทีที่เซนเซอร์ส่งข้อมูล</div>
+        </div>
+
+        <!-- Step 3: Firebase RTDB /history -->
+        <div class="pipe-step">
+          <div class="pipe-header">
+            <span class="pipe-icon">🗄️</span>
+            <span class="pipe-tag">POST /history.json</span>
+          </div>
+          <div class="pipe-name">Firebase: history</div>
+          <div class="pipe-desc">เพิ่มประวัติข้อมูลตามลำดับเวลา (Time-series Log) สำหรับกราฟและตาราง</div>
+        </div>
+
+        <!-- Step 4: GitHub Pages /freeboard -->
+        <div class="pipe-step">
+          <div class="pipe-header">
+            <span class="pipe-icon">🌐</span>
+            <span class="pipe-tag">GitHub Pages (/freeboard)</span>
+          </div>
+          <div class="pipe-name">Web Dashboard (Freeboard)</div>
+          <div class="pipe-desc">ดึงและ Sync ข้อมูลแบบ Realtime ผ่าน EventSource / REST API</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Metric Cards Grid (เซนเซอร์แบบจำลองโดยการสุ่มค่า) -->
+    <section class="metrics-grid">
+      <!-- 3.1 Temperature -->
+      <div class="metric-card glass-panel card-temp">
+        <div class="card-top">
+          <div class="metric-label-group">
+            <span class="metric-title">อุณหภูมิ (Temperature)</span>
+            <span class="metric-badge" id="badgeTemp">กำลังวัด...</span>
+          </div>
+          <div class="metric-icon-wrap">🌡️</div>
+        </div>
+        <div class="card-main-val">
+          <span class="metric-num" id="valTemp">--.-</span>
+          <span class="metric-unit">°C</span>
+        </div>
+        <div class="metric-footer">
+          <div class="metric-bar-container">
+            <div class="metric-bar-fill" id="barTemp" style="width: 50%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>ช่วงค่า: 15 - 45 °C</span>
+            <span style="color: var(--accent-rose);">ESPHome Random Sensor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.2 Humidity -->
+      <div class="metric-card glass-panel card-humidity">
+        <div class="card-top">
+          <div class="metric-label-group">
+            <span class="metric-title">ความชื้นสัมพัทธ์ (Humidity)</span>
+            <span class="metric-badge" id="badgeHum">กำลังวัด...</span>
+          </div>
+          <div class="metric-icon-wrap">💧</div>
+        </div>
+        <div class="card-main-val">
+          <span class="metric-num" id="valHum">--.-</span>
+          <span class="metric-unit">%</span>
+        </div>
+        <div class="metric-footer">
+          <div class="metric-bar-container">
+            <div class="metric-bar-fill" id="barHum" style="width: 60%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>ช่วงค่า: 20 - 100 %</span>
+            <span style="color: var(--accent-cyan);">Relative Humidity</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.3 Light Intensity -->
+      <div class="metric-card glass-panel card-light">
+        <div class="card-top">
+          <div class="metric-label-group">
+            <span class="metric-title">ความเข้มแสง (Light Lux)</span>
+            <span class="metric-badge" id="badgeLux">กำลังวัด...</span>
+          </div>
+          <div class="metric-icon-wrap">☀️</div>
+        </div>
+        <div class="card-main-val">
+          <span class="metric-num" id="valLux">---</span>
+          <span class="metric-unit">lx</span>
+        </div>
+        <div class="metric-footer">
+          <div class="metric-bar-container">
+            <div class="metric-bar-fill" id="barLux" style="width: 45%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>จำลองเซนเซอร์: BH1750</span>
+            <span style="color: var(--accent-amber);">Ambient Lux</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.4 Soil Moisture -->
+      <div class="metric-card glass-panel card-soil">
+        <div class="card-top">
+          <div class="metric-label-group">
+            <span class="metric-title">ความชื้นในดิน (Soil Moisture)</span>
+            <span class="metric-badge" id="badgeSoil">กำลังวัด...</span>
+          </div>
+          <div class="metric-icon-wrap">🌱</div>
+        </div>
+        <div class="card-main-val">
+          <span class="metric-num" id="valSoil">--.-</span>
+          <span class="metric-unit">%</span>
+        </div>
+        <div class="metric-footer">
+          <div class="metric-bar-container">
+            <div class="metric-bar-fill" id="barSoil" style="width: 55%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>ระดับความชุ่มชื้นดิน</span>
+            <span style="color: var(--accent-emerald);">Analog Simulation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.5 Carbon Dioxide (CO2) -->
+      <div class="metric-card glass-panel card-co2">
+        <div class="card-top">
+          <div class="metric-label-group">
+            <span class="metric-title">คุณภาพอากาศ (CO2 Level)</span>
+            <span class="metric-badge" id="badgeCo2">กำลังวัด...</span>
+          </div>
+          <div class="metric-icon-wrap">☁️</div>
+        </div>
+        <div class="card-main-val">
+          <span class="metric-num" id="valCo2">---</span>
+          <span class="metric-unit">ppm</span>
+        </div>
+        <div class="metric-footer">
+          <div class="metric-bar-container">
+            <div class="metric-bar-fill" id="barCo2" style="width: 50%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>เกณฑ์: 400 - 1200 ppm</span>
+            <span style="color: #a855f7;">MQ-135 / SCD40</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.6 Atmospheric Pressure -->
+      <div class="metric-card glass-panel card-pressure">
+        <div class="card-top">
+          <div class="metric-label-group">
+            <span class="metric-title">ความกดอากาศ (Pressure)</span>
+            <span class="metric-badge" id="badgePressure">ปกติ</span>
+          </div>
+          <div class="metric-icon-wrap">🧭</div>
+        </div>
+        <div class="card-main-val">
+          <span class="metric-num" id="valPressure">----.-</span>
+          <span class="metric-unit">hPa</span>
+        </div>
+        <div class="metric-footer">
+          <div class="metric-bar-container">
+            <div class="metric-bar-fill" id="barPressure" style="width: 60%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>ความกดอากาศมาตรฐาน</span>
+            <span style="color: #06b6d4;">BMP280 Sensor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.7 Battery Level -->
+      <div class="metric-card glass-panel card-battery">
+        <div class="card-top">
+          <div class="metric-label-group">
+            <span class="metric-title">ระดับแบตเตอรี่ (Battery)</span>
+            <span class="metric-badge" id="badgeBattery">ปกติ</span>
+          </div>
+          <div class="metric-icon-wrap">🔋</div>
+        </div>
+        <div class="card-main-val">
+          <span class="metric-num" id="valBattery">--</span>
+          <span class="metric-unit">%</span>
+        </div>
+        <div class="metric-footer">
+          <div class="metric-bar-container">
+            <div class="metric-bar-fill" id="barBattery" style="width: 85%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>สถานะไฟสำรองระบบ</span>
+            <span style="color: #84cc16;">Battery Monitor</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Realtime Analytics & Insights -->
+    <section class="analytics-grid">
+      <!-- 4.1 Live Telemetry Chart -->
+      <div class="chart-card glass-panel">
+        <div class="card-header-flex">
+          <div class="card-header-title">
+            <span>📈 กราฟแสดงผลแบบเรียลไทม์ (Live Telemetry Stream)</span>
+          </div>
+          <div class="chart-controls">
+            <button class="chart-btn" data-points="10">10 จุด</button>
+            <button class="chart-btn active" data-points="20">20 จุด</button>
+            <button class="chart-btn" data-points="50">50 จุด</button>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="telemetryCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- 4.2 System Insights & Telemetry Meta -->
+      <div class="insights-card glass-panel">
+        <div class="card-header-flex">
+          <div class="card-header-title">
+            <span>🧠 การวิเคราะห์ค่าสภาพแวดล้อม (Smart Insights)</span>
+          </div>
+        </div>
+
+        <div class="insights-list">
+          <div class="insight-item">
+            <div class="insight-left">
+              <span class="insight-icon">🔥</span>
+              <div class="insight-meta">
+                <h4>ดัชนีความร้อน (Heat Index)</h4>
+                <p>ระดับอุณหภูมิที่ร่างกายรู้สึกจริง</p>
+              </div>
+            </div>
+            <div class="insight-val" id="insightHeatIndex">--.- °C</div>
+          </div>
+
+          <div class="insight-item">
+            <div class="insight-left">
+              <span class="insight-icon">💧</span>
+              <div class="insight-meta">
+                <h4>จุดน้ำค้าง (Dew Point)</h4>
+                <p>อุณหภูมิที่ไอน้ำเริ่มกลั่นตัวเป็นหยดน้ำ</p>
+              </div>
+            </div>
+            <div class="insight-val" id="insightDewPoint">--.- °C</div>
+          </div>
+
+          <div class="insight-item">
+            <div class="insight-left">
+              <span class="insight-icon">📡</span>
+              <div class="insight-meta">
+                <h4>สัญญาณ Wi-Fi (RSSI)</h4>
+                <p>ความแรงของสัญญาณไร้สาย</p>
+              </div>
+            </div>
+            <div class="insight-val" id="insightRssi">-60 dBm</div>
+          </div>
+
+          <div class="insight-item">
+            <div class="insight-left">
+              <span class="insight-icon">🆔</span>
+              <div class="insight-meta">
+                <h4>ชื่ออุปกรณ์ (Device ID)</h4>
+                <p>รหัสบอร์ด ESP32 ประจำโหนด</p>
+              </div>
+            </div>
+            <div class="insight-val" style="font-size: 0.85rem;" id="insightDevice">esp32-eco-station</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. History Log Table (ดึงจาก Firebase RTDB /history) -->
+    <section class="table-card glass-panel">
+      <div class="card-header-flex">
+        <div class="card-header-title">
+          <span>📜 ประวัติการบันทึกข้อมูล (Firebase /history Logs)</span>
+        </div>
+        <div>
+          <button class="btn btn-primary" id="btnExportCsv">
+            <span>📥 ส่งออกไฟล์ CSV</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>วันที่ &amp; เวลา (Timestamp)</th>
+              <th>อุณหภูมิ (°C)</th>
+              <th>ความชื้น (%)</th>
+              <th>แสง (Lux)</th>
+              <th>ความชื้นดิน (%)</th>
+              <th>CO2 (ppm)</th>
+              <th>ความกดอากาศ (hPa)</th>
+              <th>แบตเตอรี่ (%)</th>
+              <th>สถานะ Firebase</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <tr>
+              <td colspan="10" style="text-align: center; color: var(--text-dim); padding: 2rem;">
+                กำลังโหลดข้อมูลประวัติจาก Firebase...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <p>ระบบสถานีตรวจวัดสภาพแวดล้อมและสภาพอากาศอัจฉริยะ (Smart Eco &amp; Weather Station) 7 ค่า • ESP32 / ESPHome •
+        Firebase RTDB</p>
+      <p>© 2026 Embedded Systems &amp; IoT Laboratory | จัดทำเพื่อการศึกษาและส่งงานรายวิชา</p>
+    </footer>
+
+  </div>
+
+  <!-- Settings Modal (ตั้งค่า Firebase RTDB URL) -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><span>⚙️</span> ตั้งค่าการเชื่อมต่อ Firebase RTDB</h3>
+        <button class="modal-close" id="btnCloseModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="inputFirebaseUrl">Firebase Realtime Database URL:</label>
+          <input type="text" id="inputFirebaseUrl" class="form-control"
+            value="https://iot-101-1d341-default-rtdb.asia-southeast1.firebasedatabase.app"
+            placeholder="https://iot-101-1d341-default-rtdb.asia-southeast1.firebasedatabase.app" />
+          <p class="form-help">
+            💡 นำ URL มาจาก Firebase Console &gt; Realtime Database (ไม่ต้องใส่เครื่องหมาย / ท้าย URL)<br>
+            ระบบจะบันทึกค่าลงใน <code>localStorage</code> ของเว็บเบราว์เซอร์อัตโนมัติ
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="btnCancelSettings">ยกเลิก</button>
+        <button class="btn btn-primary" id="btnSaveSettings">บันทึก &amp; เชื่อมต่อใหม่</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- External JS Application -->
+  <script>
+    /* ==============================================================================
+       🌿 SMART ECO-STATION // FREEBOARD IOT REALTIME DASHBOARD
+       Path: /freeboard/app.js
+       Features:
+         - Interactive Cyber-Eco Aurora & Particle Network Background Canvas (60 FPS)
+         - Firebase Realtime Database SSE / REST Sync
+         - 7 Simulated Sensor Metrics with Smooth Animations & Smart Insights
+         - Interactive Multi-axis Chart.js with Time-series Filters
+         - Realtime History Table & UTF-8 Excel CSV Export
+         - Synthesized Web Audio Sci-Fi Sound Effects
+       ============================================================================== */
+
+    // Application State
+    const DEFAULT_FIREBASE_URL = 'https://iot-101-1d341-default-rtdb.asia-southeast1.firebasedatabase.app';
+    let initialUrl = localStorage.getItem('firebase_rtdb_url');
+    if (!initialUrl || initialUrl.includes('iot101-2da1e')) {
+      initialUrl = DEFAULT_FIREBASE_URL;
+      localStorage.setItem('firebase_rtdb_url', DEFAULT_FIREBASE_URL);
+    }
+
+    const state = {
+      firebaseUrl: initialUrl,
+      isSimulating: false,
+      soundEnabled: true,
+      canvasFxEnabled: true,
+      theme: localStorage.getItem('theme') || 'dark',
+      lastDataTimestamp: null,
+      historyData: [],
+      chartMaxPoints: 20,
+      sseSource: null,
+      simInterval: null,
+      relativeTimer: null
+    };
+
+    // ==============================================================================
+    // 1. DYNAMIC CYBER-ECO PARTICLE & AURORA CANVAS ENGINE
+    // ==============================================================================
+    class EcoCanvasEngine {
+      constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        if (!this.canvas) return;
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.particleCount = window.innerWidth < 768 ? 40 : 80;
+        this.mouse = { x: -1000, y: -1000, radius: 140 };
+        this.animFrameId = null;
+        this.auroraAngle = 0;
+
+        this.resize();
+        this.initParticles();
+        this.bindEvents();
+        this.animate();
+      }
+
+      resize() {
+        this.width = this.canvas.width = window.innerWidth;
+        this.height = this.canvas.height = window.innerHeight;
+      }
+
+      initParticles() {
+        this.particles = [];
+        const colors = [
+          'rgba(0, 242, 254, ',   // Neon Cyan
+          'rgba(16, 185, 129, ',  // Neon Emerald
+          'rgba(20, 184, 166, ',  // Teal
+          'rgba(168, 85, 247, ',  // Purple
+          'rgba(132, 204, 22, '   // Lime
+        ];
+
+        for (let i = 0; i < this.particleCount; i++) {
+          this.particles.push({
+            x: Math.random() * this.width,
+            y: Math.random() * this.height,
+            vx: (Math.random() - 0.5) * 0.75,
+            vy: (Math.random() - 0.5) * 0.75,
+            radius: Math.random() * 2.5 + 1.2,
+            colorPrefix: colors[Math.floor(Math.random() * colors.length)],
+            alpha: Math.random() * 0.6 + 0.25,
+            pulseSpeed: Math.random() * 0.02 + 0.01,
+            pulseOffset: Math.random() * Math.PI * 2
+          });
+        }
+      }
+
+      bindEvents() {
+        window.addEventListener('resize', () => {
+          this.resize();
+          this.initParticles();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+          this.mouse.x = e.clientX;
+          this.mouse.y = e.clientY;
+        });
+
+        window.addEventListener('mouseleave', () => {
+          this.mouse.x = -1000;
+          this.mouse.y = -1000;
+        });
+      }
+
+      drawAurora() {
+        this.auroraAngle += 0.003;
+        const g = this.ctx.createRadialGradient(
+          this.width * 0.25 + Math.sin(this.auroraAngle) * 120,
+          this.height * 0.35 + Math.cos(this.auroraAngle * 0.8) * 80,
+          50,
+          this.width * 0.5,
+          this.height * 0.5,
+          this.width * 0.8
+        );
+        g.addColorStop(0, 'rgba(0, 242, 254, 0.07)');
+        g.addColorStop(0.35, 'rgba(16, 185, 129, 0.05)');
+        g.addColorStop(0.7, 'rgba(168, 85, 247, 0.04)');
+        g.addColorStop(1, 'transparent');
+
+        this.ctx.fillStyle = g;
+        this.ctx.fillRect(0, 0, this.width, this.height);
+      }
+
+      animate() {
+        if (!state.canvasFxEnabled) {
+          this.ctx.clearRect(0, 0, this.width, this.height);
+          return;
+        }
+
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        this.drawAurora();
+
+        const pts = this.particles;
+        const len = pts.length;
+
+        for (let i = 0; i < len; i++) {
+          const p = pts[i];
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Wrap around screen edges
+          if (p.x < -10) p.x = this.width + 10;
+          if (p.x > this.width + 10) p.x = -10;
+          if (p.y < -10) p.y = this.height + 10;
+          if (p.y > this.height + 10) p.y = -10;
+
+          // Distance to mouse
+          const dxMouse = this.mouse.x - p.x;
+          const dyMouse = this.mouse.y - p.y;
+          const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+
+          if (distMouse < this.mouse.radius) {
+            const force = (this.mouse.radius - distMouse) / this.mouse.radius;
+            p.x -= (dxMouse / distMouse) * force * 3;
+            p.y -= (dyMouse / distMouse) * force * 3;
+          }
+
+          // Draw particle glow
+          const pulsingAlpha = Math.max(0.1, p.alpha + Math.sin(p.pulseOffset + this.auroraAngle * 3) * 0.2);
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = p.colorPrefix + pulsingAlpha + ')';
+          this.ctx.shadowBlur = 8;
+          this.ctx.shadowColor = p.colorPrefix + '0.8)';
+          this.ctx.fill();
+          this.ctx.shadowBlur = 0;
+
+          // Connect with nearby particles (Wireless IoT Mesh lines)
+          for (let j = i + 1; j < len; j++) {
+            const p2 = pts[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 110) {
+              const lineAlpha = (1 - dist / 110) * 0.2;
+              this.ctx.beginPath();
+              this.ctx.moveTo(p.x, p.y);
+              this.ctx.lineTo(p2.x, p2.y);
+              this.ctx.strokeStyle = `rgba(0, 242, 254, ${lineAlpha})`;
+              this.ctx.lineWidth = 0.8;
+              this.ctx.stroke();
+            }
+          }
+        }
+
+        this.animFrameId = requestAnimationFrame(() => this.animate());
+      }
+
+      toggle() {
+        state.canvasFxEnabled = !state.canvasFxEnabled;
+        if (state.canvasFxEnabled) {
+          this.animate();
+        } else {
+          cancelAnimationFrame(this.animFrameId);
+          this.ctx.clearRect(0, 0, this.width, this.height);
+        }
+      }
+    }
+
+    // ==============================================================================
+    // 2. AUDIO SYNTHESIZER (Sci-Fi Futuristic Interface Sounds)
+    // ==============================================================================
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(freq = 920, type = 'sine', duration = 0.08) {
+      if (!state.soundEnabled) return;
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.3, audioCtx.currentTime + duration);
+        gain.gain.setValueAtTime(0.035, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) { }
+    }
+
+    // ==============================================================================
+    // 3. CHART.JS INITIALIZATION (Realtime Multi-Axis Line Chart)
+    // ==============================================================================
+    let telemetryChart = null;
+
+    function initChart() {
+      const canvas = document.getElementById('telemetryCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      const gradientTemp = ctx.createLinearGradient(0, 0, 0, 300);
+      gradientTemp.addColorStop(0, 'rgba(244, 63, 94, 0.4)');
+      gradientTemp.addColorStop(1, 'rgba(244, 63, 94, 0.0)');
+
+      const gradientHum = ctx.createLinearGradient(0, 0, 0, 300);
+      gradientHum.addColorStop(0, 'rgba(0, 242, 254, 0.4)');
+      gradientHum.addColorStop(1, 'rgba(0, 242, 254, 0.0)');
+
+      telemetryChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'อุณหภูมิ (°C)',
+              data: [],
+              borderColor: '#f43f5e',
+              backgroundColor: gradientTemp,
+              borderWidth: 2.5,
+              tension: 0.38,
+              fill: true,
+              pointRadius: 3,
+              pointHoverRadius: 6,
+              pointBackgroundColor: '#f43f5e',
+              yAxisID: 'yTemp'
+            },
+            {
+              label: 'ความชื้น (%)',
+              data: [],
+              borderColor: '#00f2fe',
+              backgroundColor: gradientHum,
+              borderWidth: 2.5,
+              tension: 0.38,
+              fill: true,
+              pointRadius: 3,
+              pointHoverRadius: 6,
+              pointBackgroundColor: '#00f2fe',
+              yAxisID: 'yHum'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: '#94a3b8',
+                font: { family: "'Prompt', sans-serif", size: 12 }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(10, 16, 32, 0.95)',
+              titleFont: { family: "'Prompt', sans-serif", size: 13 },
+              bodyFont: { family: "'JetBrains Mono', monospace", size: 12 },
+              borderColor: 'rgba(0, 242, 254, 0.35)',
+              borderWidth: 1,
+              padding: 10
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.04)' },
+              ticks: { color: '#64748b', font: { family: "'JetBrains Mono', monospace", size: 11 } }
+            },
+            yTemp: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              min: 15,
+              max: 45,
+              grid: { color: 'rgba(255, 255, 255, 0.04)' },
+              ticks: {
+                color: '#f43f5e',
+                font: { family: "'JetBrains Mono', monospace", size: 11 },
+                callback: (v) => v + ' °C'
+              }
+            },
+            yHum: {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              min: 20,
+              max: 100,
+              grid: { drawOnChartArea: false },
+              ticks: {
+                color: '#00f2fe',
+                font: { family: "'JetBrains Mono', monospace", size: 11 },
+                callback: (v) => v + ' %'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Compute Heat Index (Celsius formula)
+    function computeHeatIndex(T, RH) {
+      if (T < 27) return T;
+      const c1 = -8.78469475556, c2 = 1.61139411, c3 = 2.33854883889;
+      const c4 = -0.14611605, c5 = -0.012308094, c6 = -0.0164248277778;
+      const c7 = 0.002211732, c8 = 0.00072546, c9 = -0.000003582;
+      const hi = c1 + c2 * T + c3 * RH + c4 * T * RH + c5 * T * T + c6 * RH * RH + c7 * T * T * RH + c8 * T * RH * RH + c9 * T * T * RH * RH;
+      return Math.round(hi * 10) / 10;
+    }
+
+    // Compute Dew Point (Celsius)
+    function computeDewPoint(T, RH) {
+      const a = 17.27, b = 237.7;
+      const alpha = ((a * T) / (b + T)) + Math.log(RH / 100.0);
+      const dp = (b * alpha) / (a - alpha);
+      return Math.round(dp * 10) / 10;
+    }
+
+    // ==============================================================================
+    // 4. UPDATE REALTIME UI (7 SENSOR METRICS)
+    // ==============================================================================
+    function updateLatestUI(data) {
+      const temp = parseFloat(data.temperature) || 0;
+      const hum = parseFloat(data.humidity) || 0;
+      const lux = parseInt(data.light_lux) || 0;
+      const soil = parseFloat(data.soil_moisture) || 0;
+      const co2 = parseInt(data.co2) || 600;
+      const press = parseFloat(data.pressure) || 1013.2;
+      const bat = parseInt(data.battery) || 95;
+      const timestamp = data.timestamp || new Date().toLocaleTimeString('th-TH');
+
+      state.lastDataTimestamp = new Date();
+
+      // 1. Temperature Card
+      const tempEl = document.getElementById('valTemp');
+      if (tempEl) tempEl.textContent = temp.toFixed(1);
+      const tempBar = document.getElementById('barTemp');
+      if (tempBar) tempBar.style.width = Math.min(100, Math.max(0, ((temp - 15) / (45 - 15)) * 100)) + '%';
+      const tempBadge = document.getElementById('badgeTemp');
+      if (tempBadge) {
+        if (temp < 25) { tempBadge.textContent = '❄️ อากาศเย็น'; tempBadge.style.color = '#38bdf8'; }
+        else if (temp <= 32) { tempBadge.textContent = '🌿 เย็นสบาย'; tempBadge.style.color = '#10b981'; }
+        else if (temp <= 36) { tempBadge.textContent = '☀️ อากาศอุ่น'; tempBadge.style.color = '#f59e0b'; }
+        else { tempBadge.textContent = '🔥 อากาศร้อนจัด'; tempBadge.style.color = '#f43f5e'; }
+      }
+
+      // 2. Humidity Card
+      const humEl = document.getElementById('valHum');
+      if (humEl) humEl.textContent = hum.toFixed(1);
+      const humBar = document.getElementById('barHum');
+      if (humBar) humBar.style.width = Math.min(100, Math.max(0, hum)) + '%';
+      const humBadge = document.getElementById('badgeHum');
+      if (humBadge) {
+        if (hum < 40) { humBadge.textContent = '🌵 อากาศแห้ง'; humBadge.style.color = '#f59e0b'; }
+        else if (hum <= 70) { humBadge.textContent = '💧 ความชื้นเหมาะสม'; humBadge.style.color = '#00f2fe'; }
+        else { humBadge.textContent = '🌧️ ความชื้นสูง'; humBadge.style.color = '#8b5cf6'; }
+      }
+
+      // 3. Light Lux Card
+      const luxEl = document.getElementById('valLux');
+      if (luxEl) luxEl.textContent = lux.toLocaleString();
+      const luxBar = document.getElementById('barLux');
+      if (luxBar) luxBar.style.width = Math.min(100, (lux / 1000) * 100) + '%';
+      const luxBadge = document.getElementById('badgeLux');
+      if (luxBadge) {
+        if (lux < 200) { luxBadge.textContent = '🌙 แสงน้อย/มืด'; }
+        else if (lux < 600) { luxBadge.textContent = '💡 แสงสว่างพอดี'; }
+        else { luxBadge.textContent = '☀️ แสงจ้า'; }
+      }
+
+      // 4. Soil Moisture Card
+      const soilEl = document.getElementById('valSoil');
+      if (soilEl) soilEl.textContent = soil.toFixed(1);
+      const soilBar = document.getElementById('barSoil');
+      if (soilBar) soilBar.style.width = Math.min(100, Math.max(0, soil)) + '%';
+      const soilBadge = document.getElementById('badgeSoil');
+      if (soilBadge) {
+        if (soil < 35) { soilBadge.textContent = '🍂 ดินแห้ง'; soilBadge.style.color = '#f59e0b'; }
+        else if (soil <= 75) { soilBadge.textContent = '🌱 ชุ่มชื้นดี'; soilBadge.style.color = '#10b981'; }
+        else { soilBadge.textContent = '💧 แฉะ/น้ำขัง'; soilBadge.style.color = '#38bdf8'; }
+      }
+
+      // 5. CO2 Level Card
+      const co2El = document.getElementById('valCo2');
+      if (co2El) co2El.textContent = co2.toLocaleString();
+      const co2Bar = document.getElementById('barCo2');
+      if (co2Bar) co2Bar.style.width = Math.min(100, Math.max(0, ((co2 - 400) / (1200 - 400)) * 100)) + '%';
+      const co2Badge = document.getElementById('badgeCo2');
+      if (co2Badge) {
+        if (co2 < 600) { co2Badge.textContent = '🍃 บริสุทธิ์เยี่ยม'; co2Badge.style.color = '#10b981'; }
+        else if (co2 < 1000) { co2Badge.textContent = '💨 อากาศดี'; co2Badge.style.color = '#00f2fe'; }
+        else { co2Badge.textContent = '⚠️ อากาศระบายช้า'; co2Badge.style.color = '#f59e0b'; }
+      }
+
+      // 6. Air Pressure Card
+      const pressEl = document.getElementById('valPressure');
+      if (pressEl) pressEl.textContent = press.toFixed(1);
+      const pressBar = document.getElementById('barPressure');
+      if (pressBar) pressBar.style.width = Math.min(100, Math.max(0, ((press - 1000) / 30) * 100)) + '%';
+      const pressBadge = document.getElementById('badgePressure');
+      if (pressBadge) {
+        if (press < 1010) { pressBadge.textContent = '🌧️ ความกดอากาศต่ำ'; }
+        else { pressBadge.textContent = '☀️ อากาศแจ่มใส'; }
+      }
+
+      // 7. Battery Level Card
+      const batEl = document.getElementById('valBattery');
+      if (batEl) batEl.textContent = bat;
+      const batBar = document.getElementById('barBattery');
+      if (batBar) batBar.style.width = Math.min(100, Math.max(0, bat)) + '%';
+      const batBadge = document.getElementById('badgeBattery');
+      if (batBadge) {
+        if (bat > 50) { batBadge.textContent = '🔋 แบตเตอรี่เต็ม'; batBadge.style.color = '#84cc16'; }
+        else { batBadge.textContent = '🪫 ควรชาร์จไฟ'; batBadge.style.color = '#f59e0b'; }
+      }
+
+      // 8. Smart Insights
+      const heatIndex = computeHeatIndex(temp, hum);
+      const dewPoint = computeDewPoint(temp, hum);
+      const hiEl = document.getElementById('insightHeatIndex');
+      if (hiEl) hiEl.textContent = `${heatIndex.toFixed(1)} °C`;
+      const dpEl = document.getElementById('insightDewPoint');
+      if (dpEl) dpEl.textContent = `${dewPoint.toFixed(1)} °C`;
+      const devEl = document.getElementById('insightDevice');
+      if (devEl) devEl.textContent = data.device_id || 'esp32-eco-station';
+      const rssiEl = document.getElementById('insightRssi');
+      if (rssiEl) rssiEl.textContent = data.rssi ? `${data.rssi} dBm` : '-58 dBm';
+
+      // Update chart
+      addChartPoint(timestamp, temp, hum);
+
+      // Play audio blip
+      playBeep(980, 'sine', 0.05);
+    }
+
+    // Append point to Chart
+    function addChartPoint(label, temp, hum) {
+      if (!telemetryChart) return;
+      const timeShort = label.length > 8 ? label.substring(label.length - 8) : label;
+
+      telemetryChart.data.labels.push(timeShort);
+      telemetryChart.data.datasets[0].data.push(temp);
+      telemetryChart.data.datasets[1].data.push(hum);
+
+      if (telemetryChart.data.labels.length > state.chartMaxPoints) {
+        telemetryChart.data.labels.shift();
+        telemetryChart.data.datasets[0].data.shift();
+        telemetryChart.data.datasets[1].data.shift();
+      }
+
+      telemetryChart.update('none');
+    }
+
+    // Update History Data Table
+    function renderHistoryTable(records) {
+      const tbody = document.getElementById('historyTableBody');
+      if (!tbody) return;
+
+      tbody.innerHTML = '';
+      if (!records || records.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: var(--text-dim); padding: 2rem;">ไม่มีข้อมูลประวัติในระบบ</td></tr>`;
+        return;
+      }
+
+      // Show newest on top
+      const sorted = [...records].reverse().slice(0, 30);
+      sorted.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+      <td style="font-family: var(--font-mono); color: var(--text-dim);">${index + 1}</td>
+      <td style="font-family: var(--font-mono);">${item.timestamp || '-'}</td>
+      <td style="font-family: var(--font-mono); font-weight: 700; color: #f43f5e;">${Number(item.temperature).toFixed(1)} °C</td>
+      <td style="font-family: var(--font-mono); font-weight: 700; color: #00f2fe;">${Number(item.humidity).toFixed(1)} %</td>
+      <td style="font-family: var(--font-mono); color: #fbbf24;">${item.light_lux || '-'} lx</td>
+      <td style="font-family: var(--font-mono); color: #10b981;">${item.soil_moisture ? Number(item.soil_moisture).toFixed(1) + ' %' : '-'}</td>
+      <td style="font-family: var(--font-mono); color: #a855f7;">${item.co2 ? item.co2 + ' ppm' : '-'}</td>
+      <td style="font-family: var(--font-mono); color: #06b6d4;">${item.pressure ? Number(item.pressure).toFixed(1) + ' hPa' : '-'}</td>
+      <td style="font-family: var(--font-mono); color: #84cc16;">${item.battery ? item.battery + ' %' : '-'}</td>
+      <td><span class="table-badge badge-online">บันทึกสำเร็จ</span></td>
+    `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Fetch History Node from Firebase REST
+    async function fetchFirebaseHistory() {
+      if (state.isSimulating) return;
+      const cleanUrl = state.firebaseUrl.replace(/\/+$/, '');
+      const historyUrl = `${cleanUrl}/history.json?orderBy="$key"&limitToLast=30`;
+
+      try {
+        const res = await fetch(historyUrl);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (data) {
+          const records = Object.keys(data).map(k => data[k]);
+          state.historyData = records;
+          renderHistoryTable(records);
+
+          // Preload chart with history
+          if (telemetryChart && telemetryChart.data.labels.length === 0) {
+            records.slice(-state.chartMaxPoints).forEach(r => {
+              const t = r.timestamp || '';
+              addChartPoint(t, r.temperature, r.humidity);
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('Firebase /history note:', err.message);
+      }
+    }
+
+    // Connect to Firebase RTDB using Server-Sent Events (SSE / EventSource)
+    function connectFirebaseRTDB() {
+      if (state.isSimulating) return;
+
+      const statusPill = document.getElementById('connectionStatusPill');
+      const statusText = document.getElementById('connectionStatusText');
+
+      if (state.sseSource) {
+        state.sseSource.close();
+        state.sseSource = null;
+      }
+
+      const cleanUrl = state.firebaseUrl.replace(/\/+$/, '');
+      const latestSseUrl = `${cleanUrl}/latest.json`;
+
+      if (statusPill) statusPill.className = 'status-pill';
+      if (statusText) statusText.textContent = 'กำลังเชื่อมต่อ Firebase...';
+
+      try {
+        fetch(`${cleanUrl}/latest.json`)
+          .then(res => res.json())
+          .then(initialData => {
+            if (initialData && typeof initialData === 'object') {
+              updateLatestUI(initialData);
+              if (statusPill) statusPill.className = 'status-pill';
+              if (statusText) statusText.textContent = '🟢 เชื่อมต่อ Realtime สำเร็จ';
+              showToast('เชื่อมต่อ Firebase RTDB สำเร็จแล้ว!');
+            }
+          })
+          .catch(err => {
+            console.warn('Initial fetch note:', err);
+          });
+
+        state.sseSource = new EventSource(latestSseUrl);
+
+        state.sseSource.addEventListener('put', function (event) {
+          try {
+            const payload = JSON.parse(event.data);
+            if (payload && payload.data) {
+              updateLatestUI(payload.data);
+              if (statusPill) statusPill.className = 'status-pill';
+              if (statusText) statusText.textContent = '🟢 ซิงค์ Realtime สำเร็จ';
+            }
+          } catch (e) {
+            console.error('Error parsing SSE payload:', e);
+          }
+        });
+
+        state.sseSource.onerror = function (err) {
+          if (statusPill) statusPill.className = 'status-pill offline';
+          if (statusText) statusText.textContent = '⚠️ ออฟไลน์ / กำลังเชื่อมต่อใหม่...';
+        };
+
+        fetchFirebaseHistory();
+
+      } catch (err) {
+        if (statusPill) statusPill.className = 'status-pill offline';
+        if (statusText) statusText.textContent = '❌ ล้มเหลว: ตรวจสอบ URL';
+        showToast('ไม่สามารถเชื่อมต่อ Firebase URL ได้ กรุณาตรวจสอบการตั้งค่า');
+      }
+    }
+
+    // Simulator Mode Generator (For testing without hardware)
+    function toggleSimulator(forceState = null) {
+      state.isSimulating = forceState !== null ? forceState : !state.isSimulating;
+      const simBtn = document.getElementById('btnToggleSim');
+      const statusPill = document.getElementById('connectionStatusPill');
+      const statusText = document.getElementById('connectionStatusText');
+
+      if (state.isSimulating) {
+        if (state.sseSource) {
+          state.sseSource.close();
+          state.sseSource = null;
+        }
+        if (simBtn) {
+          simBtn.classList.add('btn-primary');
+          simBtn.innerHTML = '<span>⏸️ หยุดจำลองข้อมูล</span>';
+        }
+        if (statusPill) statusPill.className = 'status-pill simulating';
+        if (statusText) statusText.textContent = '🟣 กำลังจำลองข้อมูล (Demo Simulation)';
+        showToast('เปิดโหมดสุ่มจำลองข้อมูล 7 พารามิเตอร์แบบ Realtime!');
+
+        let baseTemp = 28.5;
+        let baseHum = 65.0;
+
+        const generateSimTick = () => {
+          baseTemp += (Math.random() - 0.5) * 0.8;
+          baseTemp = Math.max(22, Math.min(38, baseTemp));
+
+          baseHum += (Math.random() - 0.5) * 1.5;
+          baseHum = Math.max(40, Math.min(90, baseHum));
+
+          const now = new Date();
+          const timeStr = now.getFullYear() + '-' +
+            String(now.getMonth() + 1).padStart(2, '0') + '-' +
+            String(now.getDate()).padStart(2, '0') + ' ' +
+            String(now.getHours()).padStart(2, '0') + ':' +
+            String(now.getMinutes()).padStart(2, '0') + ':' +
+            String(now.getSeconds()).padStart(2, '0');
+
+          const simData = {
+            temperature: Math.round(baseTemp * 10) / 10,
+            humidity: Math.round(baseHum * 10) / 10,
+            light_lux: Math.floor(250 + Math.random() * 550),
+            soil_moisture: Math.round((45 + Math.random() * 25) * 10) / 10,
+            co2: Math.floor(450 + Math.random() * 500),
+            pressure: Math.round((1010 + (Math.random() * 10)) * 10) / 10,
+            battery: Math.floor(88 + Math.random() * 12),
+            timestamp: timeStr,
+            device_id: 'esp32-eco-station',
+            rssi: -58 - Math.floor(Math.random() * 10)
+          };
+
+          updateLatestUI(simData);
+          state.historyData.push(simData);
+          renderHistoryTable(state.historyData);
+        };
+
+        generateSimTick();
+        state.simInterval = setInterval(generateSimTick, 3500);
+
+      } else {
+        clearInterval(state.simInterval);
+        state.simInterval = null;
+        if (simBtn) {
+          simBtn.classList.remove('btn-primary');
+          simBtn.innerHTML = '<span>🎲 ทดสอบข้อมูลจำลอง</span>';
+        }
+        showToast('ปิดโหมดจำลองข้อมูล กลับสู่โหมดเชื่อมต่อ Firebase');
+        connectFirebaseRTDB();
+      }
+    }
+
+    // Relative Time Formatter ("5 วินาทีที่แล้ว")
+    function startRelativeTimeWatcher() {
+      setInterval(() => {
+        const el = document.getElementById('lastUpdateText');
+        if (!el || !state.lastDataTimestamp) return;
+
+        const diffSec = Math.floor((new Date() - state.lastDataTimestamp) / 1000);
+        if (diffSec < 2) {
+          el.textContent = 'เมื่อสักครู่';
+        } else if (diffSec < 60) {
+          el.textContent = `${diffSec} วินาทีที่แล้ว`;
+        } else {
+          const min = Math.floor(diffSec / 60);
+          el.textContent = `${min} นาทีที่แล้ว`;
+        }
+      }, 1000);
+    }
+
+    // Export History to CSV
+    function exportToCSV() {
+      if (!state.historyData || state.historyData.length === 0) {
+        showToast('ไม่มีข้อมูลประวัติสำหรับส่งออก');
+        return;
+      }
+
+      let csvContent = '\uFEFF'; // BOM for Excel UTF-8 support
+      csvContent += 'ลำดับ,วันที่และเวลา,อุณหภูมิ (°C),ความชื้น (%),ความเข้มแสง (Lux),ความชื้นดิน (%),CO2 (ppm),ความกดอากาศ (hPa),แบตเตอรี่ (%),อุปกรณ์\n';
+
+      state.historyData.forEach((row, i) => {
+        csvContent += `"${i + 1}","${row.timestamp || ''}","${row.temperature || ''}","${row.humidity || ''}","${row.light_lux || ''}","${row.soil_moisture || ''}","${row.co2 || ''}","${row.pressure || ''}","${row.battery || ''}","${row.device_id || ''}"\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `eco_station_7params_${Date.now()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('📥 ดาวน์โหลดไฟล์ประวัติ CSV ครบ 7 พารามิเตอร์เรียบร้อย');
+    }
+
+    // Toast Notifications
+    function showToast(msg) {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<span>⚡</span><span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // ==============================================================================
+    // 5. APPLICATION MOUNT
+    // ==============================================================================
+    let canvasEngine = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Mount Canvas Background Engine
+      canvasEngine = new EcoCanvasEngine('ecoCanvas');
+
+      initChart();
+      startRelativeTimeWatcher();
+
+      // Settings Modal Elements
+      const modal = document.getElementById('settingsModal');
+      const btnSettings = document.getElementById('btnSettings');
+      const btnCloseModal = document.getElementById('btnCloseModal');
+      const btnCancelSettings = document.getElementById('btnCancelSettings');
+      const btnSaveSettings = document.getElementById('btnSaveSettings');
+      const inputFirebaseUrl = document.getElementById('inputFirebaseUrl');
+
+      if (inputFirebaseUrl) inputFirebaseUrl.value = state.firebaseUrl;
+
+      btnSettings?.addEventListener('click', () => modal?.classList.add('open'));
+      btnCloseModal?.addEventListener('click', () => modal?.classList.remove('open'));
+      btnCancelSettings?.addEventListener('click', () => modal?.classList.remove('open'));
+
+      btnSaveSettings?.addEventListener('click', () => {
+        const newUrl = inputFirebaseUrl.value.trim();
+        if (newUrl) {
+          state.firebaseUrl = newUrl;
+          localStorage.setItem('firebase_rtdb_url', newUrl);
+          showToast('บันทึกการตั้งค่า Firebase เรียบร้อยแล้ว!');
+          modal?.classList.remove('open');
+          if (!state.isSimulating) connectFirebaseRTDB();
+        }
+      });
+
+      // Simulator Toggle
+      document.getElementById('btnToggleSim')?.addEventListener('click', () => toggleSimulator());
+
+      // Background Canvas FX Toggle
+      const btnCanvasFx = document.getElementById('btnCanvasFx');
+      btnCanvasFx?.addEventListener('click', () => {
+        canvasEngine?.toggle();
+        btnCanvasFx.classList.toggle('active', state.canvasFxEnabled);
+        showToast(state.canvasFxEnabled ? 'เปิดเอฟเฟกต์พื้นหลังขยับได้แล้ว 🌌' : 'ปิดเอฟเฟกต์พื้นหลังแล้ว');
+      });
+
+      // Sound Toggle
+      const btnSound = document.getElementById('btnSound');
+      btnSound?.addEventListener('click', () => {
+        state.soundEnabled = !state.soundEnabled;
+        btnSound.innerHTML = state.soundEnabled ? '<span>🔊</span>' : '<span>🔇</span>';
+        showToast(state.soundEnabled ? 'เปิดเสียงเอฟเฟกต์แล้ว' : 'ปิดเสียงเรียบร้อย');
+      });
+
+      // Theme Toggle
+      const btnTheme = document.getElementById('btnTheme');
+      btnTheme?.addEventListener('click', () => {
+        state.theme = state.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', state.theme);
+        localStorage.setItem('theme', state.theme);
+        btnTheme.innerHTML = state.theme === 'dark' ? '<span>🌙</span>' : '<span>☀️</span>';
+      });
+
+      // Chart Points Control
+      document.querySelectorAll('.chart-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          state.chartMaxPoints = parseInt(e.target.dataset.points) || 20;
+        });
+      });
+
+      // Export CSV
+      document.getElementById('btnExportCsv')?.addEventListener('click', exportToCSV);
+
+      // Manual Refresh
+      document.getElementById('btnRefresh')?.addEventListener('click', () => {
+        if (!state.isSimulating) {
+          connectFirebaseRTDB();
+          fetchFirebaseHistory();
+          showToast('รีเฟรชข้อมูลจาก Firebase เรียบร้อย');
+        }
+      });
+
+      // Connect Firebase on start
+      connectFirebaseRTDB();
+    });
+
+  </script>
+</body>
+
+</html>
